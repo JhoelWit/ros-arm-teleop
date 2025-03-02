@@ -75,12 +75,10 @@ class ArmTeleop:
         servo.angle = new_angle
         rospy.loginfo(f"Setting {servo_name} angle to {servo.angle}")
 
-        rospy.sleep(0.01)  # Small delay for smooth movement
+        # rospy.sleep(0.01)  # Small delay for smooth movement
 
     def joy_callback(self, msg):
         """ Process joystick input and move servos accordingly """
-        # debug statement until it's cleaned up
-        rospy.loginfo(msg)
         self.joy_axes = msg.axes
         self.joy_buttons = msg.buttons
 
