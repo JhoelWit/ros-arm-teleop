@@ -43,12 +43,12 @@ class ArmTeleop:
 
         # Define motor control channels (adjust as necessary)
         self.servos = {
-            "base"     : servo.Servo(self.pca.channels[0]),  # Base rotation
-            "shoulder" : servo.Servo(self.pca.channels[1]),  # Shoulder joint
-            "elbow"    : servo.Servo(self.pca.channels[2]),  # Elbow joint
-            "wrist1"   : servo.Servo(self.pca.channels[3]),  # Wrist joint (pitch)
-            "wrist2"   : servo.Servo(self.pca.channels[4]),  # Second wrist joint (roll)
-            "gripper"  : servo.Servo(self.pca.channels[5]),  # Gripper open/close
+            "base"     : servo.Servo(self.pca.channels[1]),  # Base rotation
+            "shoulder" : servo.Servo(self.pca.channels[2]),  # Shoulder joint
+            "elbow"    : servo.Servo(self.pca.channels[3]),  # Elbow joint
+            "wrist1"   : servo.Servo(self.pca.channels[4]),  # Wrist joint (pitch)
+            "wrist2"   : servo.Servo(self.pca.channels[5]),  # Second wrist joint (roll)
+            "gripper"  : servo.Servo(self.pca.channels[6]),  # Gripper open/close
         }
 
         # Initialize joystick states
