@@ -94,7 +94,7 @@ class ArmTeleop:
         self.set_servo("wrist1", self.joy_axes[XboxAxes.RIGHT_STICK_X.value])
 
         # Wrist rotation with right stick X-axis
-        self.set_servo("wrist2", self.joy_axes[XboxAxes.RIGHT_STICK_X.value])
+        self.set_servo("wrist2", self.joy_axes[XboxAxes.DPAD_Y.value])
 
         # Gripper open/close with RT/LT triggers
         gripper_value = self.joy_axes[XboxAxes.RT.value] - self.joy_axes[XboxAxes.LT.value]
