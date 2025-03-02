@@ -24,10 +24,10 @@ class XboxButtons(Enum):
 class XboxAxes(Enum):
     LEFT_STICK_X = 0
     LEFT_STICK_Y = 1
-    RIGHT_STICK_X = 2
-    RIGHT_STICK_Y = 3
-    RT = 4
-    LT = 5
+    RIGHT_STICK_X = 3
+    RIGHT_STICK_Y = 4
+    RT = 5
+    LT = 2
     DPAD_X = 6
     DPAD_Y = 7
 
@@ -46,7 +46,7 @@ class ArmTeleop:
             "base"     : servo.Servo(self.pca.channels[0]),  # Base rotation
             "shoulder" : servo.Servo(self.pca.channels[1]),  # Shoulder joint
             "elbow"    : servo.Servo(self.pca.channels[2]),  # Elbow joint
-            "wris1"    : servo.Servo(self.pca.channels[3]),  # Wrist joint (pitch)
+            "wrist1"   : servo.Servo(self.pca.channels[3]),  # Wrist joint (pitch)
             "wrist2"   : servo.Servo(self.pca.channels[4]),  # Second wrist joint (roll)
             "gripper"  : servo.Servo(self.pca.channels[5]),  # Gripper open/close
         }
@@ -75,7 +75,7 @@ class ArmTeleop:
         servo.angle = new_angle
         rospy.loginfo(f"Setting {servo_name} angle to {servo.angle}")
 
-        rospy.sleep(0.03)  # Small delay for smooth movement
+        rospy.sleep(0.01)  # Small delay for smooth movement
 
     def joy_callback(self, msg):
         """ Process joystick input and move servos accordingly """
@@ -94,9 +94,10 @@ class ArmTeleop:
         self.set_servo("elbow", self.joy_axes[XboxAxes.RIGHT_STICK_Y.value])
 
         # Wrist rotation with right stick X-axis
-        self.set_servo("wrist2", self.joy_axes[XboxAxes.RIGHT_STICK_X.value])
+        self.set_servo("wrist1", self.joy_axes[XboxAxes.RIGHT_STICK_X.value])
 
-        # TODO: Add support for wrist1
+        # Wrist rotation with right stick X-axis
+        self.set_servo("wrist2", self.joy_axes[XboxAxes.RIGHT_STICK_X.value])
 
         # Gripper open/close with RT/LT triggers
         gripper_value = self.joy_axes[XboxAxes.RT.value] - self.joy_axes[XboxAxes.LT.value]
