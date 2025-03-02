@@ -5,7 +5,7 @@ import board
 import busio
 from sensor_msgs.msg import Joy
 from enum import Enum
-from adafruit_pca9685 import PCA9685
+from Adafruit_PCA9685 import PCA9685
 
 class XboxButtons(Enum):
     A = 0
