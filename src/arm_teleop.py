@@ -39,7 +39,7 @@ class ArmTeleop:
         i2c = busio.I2C(board.SCL, board.SDA)
         self.pca = PCA9685(i2c, address=0x41)
         self.pca.frequency = 50  # 50Hz for servos
-        self.step_size = 0.5 # Incremental step size for each motor
+        self.step_size = 5 # Incremental step size for each motor
 
         # Define motor control channels (adjust as necessary)
         self.servos = {
@@ -64,9 +64,6 @@ class ArmTeleop:
 
         if servo.angle is None:  # Ensure the servo has an initial position
             servo.angle = 90  # Start at neutral position
-            for i in range(90, 180):
-                servo.angle = i
-                rospy.sleep(0.03)
 
         # Calculate new angle based on joystick input
         new_angle = servo.angle + (self.step_size * value)
@@ -78,7 +75,7 @@ class ArmTeleop:
         servo.angle = new_angle
         rospy.loginfo(f"Setting {servo_name} angle to {servo.angle}")
 
-        rospy.sleep(0.1)  # Small delay for smooth movement
+        rospy.sleep(0.03)  # Small delay for smooth movement
 
     def joy_callback(self, msg):
         """ Process joystick input and move servos accordingly """

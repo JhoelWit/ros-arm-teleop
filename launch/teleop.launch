@@ -1,6 +1,10 @@
 <launch>
     <!-- Start the joystick node -->
-    <node pkg="joy" type="joy_node" name="joy_node" output="screen" />
+    <node pkg="joy" type="joy_node" name="joy_node" output="screen" >
+
+      <param name="deadzone" value="0.1" />
+
+    </node>
 
     <!-- Start the arm teleop node -->
     <node pkg="arm_teleop" type="arm_teleop.py" name="arm_teleop" output="screen" />
