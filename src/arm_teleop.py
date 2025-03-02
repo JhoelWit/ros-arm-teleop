@@ -59,7 +59,7 @@ class ArmTeleop:
     def set_servo(self, servo_name, value):
         """ Convert joystick value (-1 to 1) to PWM signal (0 to 4095) """
         channel = self.servos[servo_name]
-        pwm_value = int((value + 1) / 2 * 4095)  # Map -1 to 1 range into 0-4095
+        pwm_value = int((value + 1) / 2 * 1024)  # Map -1 to 1 range into 0-4095 # Adjusting speed for now
         self.pca.channels[channel].duty_cycle = pwm_value
         rospy.loginfo(f"Setting {servo_name} to {pwm_value}")
 
