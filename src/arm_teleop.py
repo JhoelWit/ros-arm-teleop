@@ -64,6 +64,9 @@ class ArmTeleop:
 
         if servo.angle is None:  # Ensure the servo has an initial position
             servo.angle = 90  # Start at neutral position
+            for i in range(90, 180):
+                servo.angle = i
+                rospy.sleep(0.03)
 
         # Calculate new angle based on joystick input
         new_angle = servo.angle + (self.step_size * value)
