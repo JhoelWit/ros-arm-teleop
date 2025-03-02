@@ -3,5 +3,5 @@
     <node pkg="joy" type="joy_node" name="joy_node" output="screen" />
 
     <!-- Start the arm teleop node -->
-    <node pkg="ros_chess_arm" type="arm_teleop.py" name="arm_teleop" output="screen" />
+    <node pkg="arm_teleop" type="arm_teleop.py" name="arm_teleop" output="screen" />
 </launch>
