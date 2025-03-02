@@ -5,6 +5,7 @@ import board
 import busio
 from sensor_msgs.msg import Joy
 from enum import Enum
+from adafruit_motor import servo
 from adafruit_pca9685 import PCA9685
 
 class XboxButtons(Enum):
@@ -38,15 +39,16 @@ class ArmTeleop:
         i2c = busio.I2C(board.SCL, board.SDA)
         self.pca = PCA9685(i2c, address=0x41)
         self.pca.frequency = 50  # 50Hz for servos
+        self.step_size = 0.5 # Incremental step size for each motor
 
         # Define motor control channels (adjust as necessary)
         self.servos = {
-            "base"     : 0,  # Base rotation
-            "shoulder" : 1,  # Shoulder joint
-            "elbow"    : 2,  # Elbow joint
-            "wris1"    : 3,  # Wrist joint (pitch)
-            "wrist2"   : 4,  # Second wrist joint (roll)
-            "gripper"  : 5,  # Gripper open/close
+            "base"     : servo.Servo(self.pca.channels[0]),  # Base rotation
+            "shoulder" : servo.Servo(self.pca.channels[1]),  # Shoulder joint
+            "elbow"    : servo.Servo(self.pca.channels[2]),  # Elbow joint
+            "wris1"    : servo.Servo(self.pca.channels[3]),  # Wrist joint (pitch)
+            "wrist2"   : servo.Servo(self.pca.channels[4]),  # Second wrist joint (roll)
+            "gripper"  : servo.Servo(self.pca.channels[5]),  # Gripper open/close
         }
 
         # Initialize joystick states
@@ -57,13 +59,23 @@ class ArmTeleop:
         rospy.Subscriber('/joy', Joy, self.joy_callback)
 
     def set_servo(self, servo_name, value):
-        """ Convert joystick value (-1 to 1) to PWM signal (0 to 4095) """
-        channel = self.servos[servo_name]
-        pwm_value = int((value + 1) / 2 * 4095)  # Map -1 to 1 range into 0-4095 # Adjusting speed for now
-        self.pca.channels[channel].duty_cycle = pwm_value
-        rospy.loginfo(f"Setting {servo_name} to {pwm_value}")
-        rospy.loginfo('Sleeping')
-        rospy.sleep(1)
+        """ Convert joystick input (-1 to 1) into gradual servo movement """
+        servo = self.servos[servo_name]
+
+        if servo.angle is None:  # Ensure the servo has an initial position
+            servo.angle = 90  # Start at neutral position
+
+        # Calculate new angle based on joystick input
+        new_angle = servo.angle + (self.step_size * value)
+
+        # Clamp the angle to valid servo range (0-180)
+        new_angle = max(0, min(180, new_angle))
+
+        # Set new angle
+        servo.angle = new_angle
+        rospy.loginfo(f"Setting {servo_name} angle to {servo.angle}")
+
+        rospy.sleep(0.1)  # Small delay for smooth movement
 
     def joy_callback(self, msg):
         """ Process joystick input and move servos accordingly """
@@ -90,11 +102,6 @@ class ArmTeleop:
         gripper_value = self.joy_axes[XboxAxes.RT.value] - self.joy_axes[XboxAxes.LT.value]
         self.set_servo("gripper", gripper_value)
 
-        # Example: Using buttons for quick movements
-        # if self.joy_buttons[XboxButtons.A.value]:
-        #     self.set_servo("aux", 1)  # Example action
-        # elif self.joy_buttons[XboxButtons.B.value]:
-        #     self.set_servo("aux", -1)
 
 if __name__ == "__main__":
     arm_teleop = ArmTeleop()
