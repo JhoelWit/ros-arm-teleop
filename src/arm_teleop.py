@@ -72,10 +72,9 @@ class ArmTeleop:
         new_angle = max(0, min(180, new_angle))
 
         # Set new angle
-        servo.angle = new_angle
-        rospy.loginfo(f"Setting {servo_name} angle to {servo.angle}")
-
-        # rospy.sleep(0.01)  # Small delay for smooth movement
+        if abs(new_angle - servo.angle) > 0.1:  # Avoid redundant updates
+            servo.angle = new_angle
+            rospy.loginfo(f"Setting {servo_name} angle to {servo.angle}")
 
     def joy_callback(self, msg):
         """ Process joystick input and move servos accordingly """
