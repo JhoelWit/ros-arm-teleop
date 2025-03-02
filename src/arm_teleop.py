@@ -36,7 +36,7 @@ class ArmTeleop:
 
         # Initialize PCA9685 board for PWM control
         i2c = busio.I2C(board.SCL, board.SDA)
-        self.pca = PCA9685(i2c)
+        self.pca = PCA9685(i2c, address=0x41)
         self.pca.frequency = 50  # 50Hz for servos
 
         # Define motor control channels (adjust as necessary)
